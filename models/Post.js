@@ -7,7 +7,31 @@ const sequelize = require('../config/connection');
 
 // define the post model
 // create our post model
-class Post extends Model { };
+class Post extends Model {
+    static upvote(body, models) {
+        // The only real difference here is that we're using models.Vote instead, and we'll pass the Vote model in as an argument from post-routes.js.
+        return models.Vote.create({
+            user_id: body.user_id,
+            post_id: body.post_id
+        }).then(() => {
+            return Post.findOne({
+                where: {
+                    id: body.post_id
+                },
+                attributes: [
+                    'id',
+                    'post_url',
+                    'title',
+                    'created_at',
+                    [
+                        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+                        'vote_count'
+                    ]
+                ]
+            });
+        });
+    }
+};
 
 // we defined the columns in the post and pass the current connection instance to initialize the post model.
 // create fields/columns for post model
