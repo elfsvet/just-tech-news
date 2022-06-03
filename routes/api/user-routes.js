@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+// destructure from the imported models
+const { User, Post, Vote } = require('../../models');
 
 // GET /api/users
 router.get('/', (req, res) => {
@@ -22,7 +23,28 @@ router.get('/:id', (req, res) => {
         attributes: { exclude: ['password'] },
         where: {
             id: req.params.id
-        }
+        },
+        // to receive the title info every post they voted
+        include: [
+            {
+                // which post has been created
+                model: Post,
+                attributes: [
+                    'id',
+                    'title',
+                    'post_url',
+                    'created_at'
+                ]
+            },
+            // and we contextualize it by going through the vote table.
+            {
+                // which post has been voted on under the property name 'voted_posts'
+                model: Post,
+                attributes: ['title'],
+                through: Vote,
+                as: 'voted_posts'
+            }
+        ]
     })
         .then(dbUserData => {
             if (!dbUserData) {
