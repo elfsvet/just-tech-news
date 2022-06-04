@@ -1,7 +1,7 @@
+// require a model
 const User = require('./User');
 const Post = require('./Post')
 const Vote = require('./Vote');
-// require a model
 const Comment = require('./Comment');
 
 // create associations
