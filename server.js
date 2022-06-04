@@ -17,3 +17,4 @@ app.use(routes);
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening'));
 });
+// https://peaceful-mountain-59773.herokuapp.com/ | https://git.heroku.com/peaceful-mountain-59773.git
