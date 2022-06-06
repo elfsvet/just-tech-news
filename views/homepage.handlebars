@@ -1,0 +1,21 @@
+<ol class="post-list">
+    {{!-- begin a loop --}}
+    {{#each posts as |post|}}
+    <li>
+        <article class="post">
+            <div class="title">
+                <a href="{{post.post_url}}" targer="_blank">{{post.title}}</a>
+                <span>({{post.post_url}})</span>
+            </div>
+            <div class="meta">
+                {{!-- using two curly brackets {{}} - we telling that this is going to be a String --}}
+                {{post.vote_count}} point(s) by {{post.user.username}} on
+                {{post.created_at}}
+                |
+                <a href="/post/{{post.id}}">{{post.comments.length}} comment(s)</a>
+            </div>
+        </article>
+    </li>
+    {{!-- end a loop --}}
+    {{/each}}
+</ol>
