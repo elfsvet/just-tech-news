@@ -15,20 +15,25 @@
                 <a href="/">Just Tech News</a>
             </h1>
             <nav>
+                {{#if loggedIn}}
                 <button id="logout" class="btn-no-style">logout</button>
+                {{else}}
                 <a href="/login">login</a>
+                {{/if}}
             </nav>
         </header>
         <main>
             {{!-- this is a handlebars.js syntax for data what will be plugged in later --}}
-        {{!-- Three curly brackets says it is a html format what will be inserted --}}
+            {{!-- Three curly brackets says it is a html format what will be inserted --}}
             {{{body}}}
         </main>
         <footer>
             Thanks for visiting!
         </footer>
     </div>
-<script src="/javascript/logout.js"></script>
+    {{#if loggedIn}}
+    <script src="/javascript/logout.js"></script>
+    {{/if}}
 </body>
 
 </html>

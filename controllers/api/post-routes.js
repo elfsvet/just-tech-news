@@ -135,15 +135,18 @@ router.put('/upvote', (req, res) => {
     //         })
     //     })
     
-    // custom static method created in models/post.js
-    Post.upvote(req.body, { Vote })
-    // .then(dbPostData => res.json(dbPostData))
-    .then(updatedPostData => res.json(updatedPostData))
-
-    .catch(err => {
+    // make sure the session exists first (user loggedIn)
+    if (req.session) {
+        // pass session id along with all destructured properties on req.body
+        // custom static method created in models/post.js
+        Post.upvote({...req.body, user_id: req.session.user_id},  { Vote, Comment, User })
+        // .then(dbPostData => res.json(dbPostData))
+        .then(updatedVoteData => res.json(updatedVoteData))
+        .catch(err => {
             console.log(err);
-            res.status(400).json(err);
+            res.status(500).json(err);
         });
+    }
 });
 
 // update a post
