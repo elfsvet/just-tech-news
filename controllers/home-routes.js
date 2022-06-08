@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
     })
         .then(dbPostData => {
             // pass a single post object into the homepage template
-            console.log(dbPostData[0]);
+            // console.log(dbPostData[0]);
             const posts = dbPostData.map(post=>post.get({plain:true}));
             res.render('homepage', {posts});
         })
@@ -41,7 +41,16 @@ router.get('/', (req, res) => {
 
 // login route
 router.get('/login', (req,res) => {
+    // res.render('login');
+    // console.log(req.session);
+    if (req.session.loggedIn) {
+        res.redirect('/');
+        return;
+    }
+
     res.render('login');
+
+    // other logic...
 });
 
 

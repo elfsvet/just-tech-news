@@ -36,10 +36,10 @@ router.get('/:id', (req, res) => {
                     'created_at'
                 ]
             },
-               // include the comment model here:
-               {
+            // include the comment model here:
+            {
                 model: Comment,
-                attributes: ['id', 'comment_text','created_at'],
+                attributes: ['id', 'comment_text', 'created_at'],
                 include: {
                     model: Post,
                     attributes: ['title']
@@ -77,7 +77,16 @@ router.post('/', (req, res) => {
         email: req.body.email,
         password: req.body.password
     })
-        .then(dbUserData => res.json(dbUserData))
+        // .then(dbUserData => res.json(dbUserData))
+        .then(dbUserData => {
+            req.session.save(() => {
+                req.session.user_id = dbUserData.id;
+                req.session.username = dbUserData.username;
+                req.session.loggedIn = true;
+
+                res.json(dbUserData);
+            });
+        })
         .catch(err => {
             console.log(err);
             res.status(500).json(err);
@@ -85,30 +94,50 @@ router.post('/', (req, res) => {
 });
 
 
-router.post('/login',(req,res) => {
+router.post('/login', (req, res) => {
     // query operation
     // expects {email: 'email@emali.com, password: 'password1234'}
     User.findOne({
         // queried the User table using findOne method for the email - assigned to req.body.email
         where: {
-            email:req.body.email
+            email: req.body.email
         }
         //we get the data for this email if the email exists
     }).then(dbUserData => {
-        if(!dbUserData) {
-            res.status(400).json({message: 'No user with that email address!'});
+        if (!dbUserData) {
+            res.status(400).json({ message: 'No user with that email address!' });
             return;
         }
         // add comment syntax in front of this line in the .then()
         // res.json({user: dbUserData});
         // verify user
         const validPassword = dbUserData.checkPassword(req.body.password);
-        if(!validPassword){
-            res.status(400).json({message: 'Incorrect password!'});
+
+        if (!validPassword) {
+            res.status(400).json({ message: 'Incorrect password!' });
             return;
         }
-        res.json({user: dbUserData, message: 'You are now logged in!'});
+
+        req.session.save(() => {
+            // declare session variables
+            req.session.user_id = dbUserData.id;
+            req.session.username = dbUserData.username;
+            req.session.loggedIn = true;
+
+            res.json({ user: dbUserData, message: 'You are now logged in!' });
+        });
     });
+});
+
+router.post('/logout', (req,res) => {
+    if (req.session.loggedIn) {
+        req.session.destroy(() => {
+            res.status(204).end();
+        });
+    }
+    else {
+        res.status(404).end();
+    }
 });
 
 
@@ -117,15 +146,15 @@ router.post('/login',(req,res) => {
 router.put('/:id', (req, res) => {
     // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
-    
-    
-    
+
+
+
     // if req.body has exact key/value pairs to match the model, you can just use `req.body` instead
-    
+
     // UPDATE users
     // SET username = "Lernantino", email = "lernantino@gmail.com", password = "newPassword1234"
     // WHERE id = 1;
-    
+
     // pass in req.body instead to only update what's passed through
     User.update(req.body, {
         individualHooks: true,
