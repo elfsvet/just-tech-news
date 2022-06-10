@@ -81,6 +81,7 @@ router.post('/', (req, res) => {
     Post.create({
       title: req.body.title,
       post_url: req.body.post_url,
+      // wont work in insomnia need to be changed back to the body user_id
       user_id: req.session.user_id
     })
       .then(dbPostData => res.json(dbPostData))

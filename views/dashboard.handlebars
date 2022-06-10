@@ -14,20 +14,18 @@
     </form>
 </section>
 
-{{#if post.length}}
-{{!-- if helper --}}
-<section> 
-    {{!-- section element --}}
-    <h2>Your Posts</h2>
-    <ol>
-        {{#each posts as |post|}}
-        <li>
-            {{> post-info post}}
-            {{!-- post-info partial --}}
-            <a href="/dashboard/edit/{{post.id}}" class="edit-link">Edit post</a>
-            {{!-- will route users to a separate edit page --}}
-        </li>
-        {{/each}}
-    </ol>
+{{#if posts.length}}
+<section>
+  <h2>Your Posts</h2>
+  <ol>
+    {{#each posts as |post|}}
+    <li>
+      {{> post-info post}}
+      <a href="/dashboard/edit/{{post.id}}" class="edit-link">Edit post</a>
+    </li>
+    {{/each}}
+  </ol>
 </section>
 {{/if}}
+
+<script src="/javascript/add-post.js"></script>
