@@ -63,7 +63,9 @@ User.hasMany(Comment, {
 });
 
 Post.hasMany(Comment, {
-  foreignKey: 'post_id'
+  foreignKey: 'post_id',
+  // was missing and needs to be here to remove post and update post
+  onDelete: 'SET NULL'
 });
 
 module.exports = { User, Post, Vote, Comment };
