@@ -60,9 +60,4 @@ User.init(
   }
 );
 
-<<<<<<< HEAD:models/User.js
-
-// export the model
-=======
->>>>>>> develop:models/user.js
 module.exports = User;
